@@ -1,0 +1,57 @@
+---
+name: Go
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "**.go"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "**.go"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  skip-duplicate-actions:
+    name: Skip Duplicate Actions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fkirc/skip-duplicate-actions@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cancel_others: true
+          concurrent_skipping: never
+
+  golint:
+    strategy:
+      matrix:
+        go: ["1.17", "1.18", "1.19"]
+        os: [ubuntu-latest, windows-latest]
+    name: Run golint
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go ${{ matrix.go }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Install golint & fgt
+        run: |
+          go install golang.org/x/lint/golint@latest
+          go install github.com/GeertJohan/fgt@latest
+
+      - name: Run golint
+        id: golint
+        run: |
+          fgt golint -set_exit_status ./...
