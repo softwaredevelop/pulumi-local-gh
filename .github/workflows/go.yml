@@ -31,7 +31,7 @@ jobs:
   golint:
     strategy:
       matrix:
-        go: ["1.17", "1.18", "1.19"]
+        go: ["1.18", "1.19", "1.20"]
         os: [ubuntu-latest, windows-latest]
     name: Run golint
     runs-on: ${{ matrix.os }}
