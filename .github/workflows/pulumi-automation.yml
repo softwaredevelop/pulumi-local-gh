@@ -1,0 +1,59 @@
+name: Pulumi-Automation-API
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "**.go"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "**.go"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  skip-duplicate-actions:
+    name: Skip Duplicate Actions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fkirc/skip-duplicate-actions@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cancel_others: true
+          concurrent_skipping: never
+
+  pulumi-automation-local:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    name: Pulumi-Automation-API
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: stable
+
+      - name: Install Pulumi CLI
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+        shell: bash
+
+      - name: Pulumi login local
+        run: |
+          pulumi login --local
+
+      - name: Deploy up
+        run: |
+          go run main.go
+        working-directory: auto
