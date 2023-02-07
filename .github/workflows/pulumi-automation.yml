@@ -5,12 +5,12 @@ on:
     branches:
       - "main"
     paths:
-      - "**.go"
+      - "auto/main.go"
   pull_request:
     branches:
       - "main"
     paths:
-      - "**.go"
+      - "auto/main.go"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
