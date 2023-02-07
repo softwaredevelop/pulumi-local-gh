@@ -49,7 +49,7 @@ jobs:
       - name: Install Pulumi CLI
         run: |
           curl -fsSL https://get.pulumi.com | sh
-          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+          export GITHUB_PATH="${GITHUB_PATH}:$HOME/.pulumi/bin"
           pulumi version
         shell: bash
 
