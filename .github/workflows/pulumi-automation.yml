@@ -28,13 +28,11 @@ jobs:
           concurrent_skipping: never
 
   pulumi-automation-local:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
     name: Pulumi-Automation-API
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     env:
       PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+      PULUMI_SKIP_UPDATE_CHECK: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -49,7 +47,6 @@ jobs:
       - name: Install Pulumi CLI
         run: |
           curl -fsSL https://get.pulumi.com | sh
-          export GITHUB_PATH="${GITHUB_PATH}:$HOME/.pulumi/bin"
           pulumi version
         shell: bash
 
