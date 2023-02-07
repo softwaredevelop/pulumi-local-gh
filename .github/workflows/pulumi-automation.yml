@@ -6,11 +6,13 @@ on:
       - "main"
     paths:
       - "auto/main.go"
+      - "stack/main.go"
   pull_request:
     branches:
       - "main"
     paths:
       - "auto/main.go"
+      - "stack/main.go"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -55,7 +57,7 @@ jobs:
           pulumi login --local
         shell: bash
 
-      - name: Deploy up
+      - name: Automation up
         run: |
           go run main.go
         shell: bash
