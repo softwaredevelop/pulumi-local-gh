@@ -39,7 +39,7 @@ func main() {
 
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
-		repository, err := createRepository(ctx, "pulumi-local-gh")
+		repository, err := createRepository(ctx, "pulumi-local-gh1")
 		if err != nil {
 			return err
 		}
