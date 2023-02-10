@@ -22,8 +22,6 @@ jobs:
   skip-duplicate-actions:
     name: Skip Duplicate Actions
     runs-on: ubuntu-latest
-    env:
-      PULUMI_SKIP_UPDATE_CHECK: true
     steps:
       - uses: fkirc/skip-duplicate-actions@master
         with:
@@ -59,9 +57,11 @@ jobs:
         working-directory: auto
 
       - name: Pulumi login local
+        env:
+          PULUMI_SKIP_UPDATE_CHECK: true
         run: |
           pulumi login --local
-          pulumi plugin install provider github
+          pulumi plugin install resource github
         shell: bash
 
       - name: Automation up
